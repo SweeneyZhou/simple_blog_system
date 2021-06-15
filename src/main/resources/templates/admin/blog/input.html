@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/_fragment::head(~{::title},~{::link},~{})">
+	<meta charset="UTF-8">
+	<title>写文章 ing...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+ 
+    <link rel="stylesheet" href="/plugins/css/editormd.min.css" th:href="@{/plugins/css/editormd.min.css}">
+</head>
+
+<body class="d-flex flex-column" style="min-height: 100vh;background-color: #f0f0f0">
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row" th:replace="admin/index::adminNav"></div>
+                <div class="row">
+                    <div class="card w-100 mb-3 mx-3">
+                        <form action="#" method="post" th:object="${blog}" th:action="*{id}==null?@{/admin/blog}:@{/admin/blog/{id}(id=*{id})}">
+                        <div class="card-body">
+	                        <div class="row">
+	                        
+	                            <div class="col-md-6 mb-3">
+	                                <label for="title-input">文章标题</label>
+	                                <input type="text" class="form-control" id="title-input" placeholder="请输入文章标题" value=""th:field="*{title}">
+	                            	<div class="m-2 text-danger" th:if="${#fields.hasErrors('title')}">
+			                        		<small th:errors="*{title}"></small>
+			                        </div>
+	                            </div>
+	                            <div class="col-md-6 mb-3">
+	                                <label for="type-input">文章分类</label>
+	                                <select class="custom-select d-block w-100" id="type-input" th:field="*{type}">
+	                                    <option value="">-- 请选择文章分类 --</option>
+	                                    <option th:each="type:${types}" th:value="${type.id}" th:text="${type.name}"></optin>
+	                                </select>
+								    <div class="m-2 text-danger" th:if="${#fields.hasErrors('type')}">
+			                        		<small th:errors="*{type}"></small>
+			                        </div>
+	                            </div>
+	                        </div>
+	                        <div id="test-editor">
+	                            <textarea style="display:none;" th:field="*{content}">#标题
+[TOC]</textarea>
+						    <div class="m-2 text-danger" th:if="${#fields.hasErrors('content')}">
+	                        		<small th:errors="*{content}"></small>
+	                        </div>
+	                        </div>
+	                        <div class="row">
+						        <select class="selectpicker col m-3 form-control ov" title="选择标签"  data-size="5" data-live-search ="true" multiple th:field="*{tags}">
+						            <option th:each="tag:${taglist}" th:value="${tag.id}" th:text="${tag.name}" th:attr="data-content=${tag.style}"></option>
+						            <!-- <option value="" data-content="<span class='badge badge-success'>1</span>">1</option> -->
+						        </select>
+						    </div>
+						    <div class="m-2 text-danger" th:if="${#fields.hasErrors('tags')}">
+	                        		<small th:errors="*{tags}"></small>
+	                        </div>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-end">
+                        	<input type="hidden" name="_method" value="put" th:if="${blog.id!=null}"/>
+                        	<input type="hidden" th:field="*{user}"/>
+                            <button type="submit" class="btn btn-primary mx-2">提交</button>
+                            <button type="button" class="btn btn-secondary mx-2">返回</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row" th:replace="admin/index::adminSideBar">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem blanditiis in iusto quam sunt tempora tempore, veniam. Asperiores deleniti facilis fugit laboriosam minus nisi nostrum quae, saepe, vel, veniam voluptatem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="common/_fragment::footer">
+</footer>
+   	<script>
+		$(function() {
+		    let editor = editormd("test-editor", {
+		        width  : "100%",
+		        height : "600px",
+		        path   : "[[@{/plugins/lib/}]]",
+		        toolbarIcons : "mini"});
+		});
+	</script>
+</body>
+</html>

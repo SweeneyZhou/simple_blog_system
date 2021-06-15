@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/_fragment::head(~{::title},~{::link},~{::style})">
+    <meta charset="UTF-8">
+    <title th:text="${blog.title}">标题</title>
+    <link rel="stylesheet" href="" th:href="@{/plugins/css/editormd.preview.css}"> 
+    <style>
+        .comment-content{
+            background-color: #66ccff;
+            position: relative;
+        }
+        .comment-content:before{
+            content: '';
+            position: absolute;
+            top:-0.2rem;
+            width: 10px;
+            height: 10px;
+            background: inherit;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+<header th:replace="common/_fragment::header"></header>
+
+<main class="mb-2">
+    <div class="container">
+        <div class="row">
+            <div class="card w-100 m-2 shadow">
+                <div class="card-header d-flex align-items-center overflow-hidden">
+                    <h4 class="d-inline-block mb-0" th:text="${blog.title}">sdafsadfsadfsdfsdfsdEditor.md</h4>
+                    <span class="badge badge-primary ml-2" th:each="tag:${blog.tags}" th:text="${tag.name}">标签</span>
+                </div>
+                <div class="card-body py-2">
+                    <div id="test-markdown-view" style="background-color: inherit">
+                        <!-- Server-side output Markdown text -->
+                        <textarea style="display:none;" th:text="${blog.content}">### Hello world!</textarea>
+                    </div>
+                </div>
+                <div class="card-footer d-lg-flex justify-content-lg-between">
+                    <div class="d-none d-lg-block">
+                        <img src="#" alt="" title="头像" width="32" data-gravatar="75a32697f9e2875d080c75d1c049ff50" th:attr="data-gravatar=${blog.user?.email}" data-gravatar-size="4">
+                        <span class="mx-2" th:text="${blog.user?.nickname}">作者</span>
+                        <span class="mx-2">发表于</span>
+                        <span class="mx-2" th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm:ss')}">2020年3月31日20:50:47</span>
+                        <span class="mx-2">评论数:</span>
+                        <span th:text="${#lists.size(blog.comments)}">88</span>
+                        <span class="mx-2">访问量:</span><span th:text="${blog.visitCount/2}"></span>
+                        <span class="mx-2">分类：</span>
+                        <span class="mx-2" th:text="${blog.type.name}">分类</span>
+                    </div>
+                </div>
+                <script>
+                    $(function() {
+                        let testView = editormd.markdownToHTML("test-markdown-view", { });
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card w-100 m-2 shandow">
+                <div class="card-header">
+                    <h4>发表评论</h4>
+                </div>
+                <form method="post"  th:object="${comment}" th:action="@{/comment}">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="mb-2" id="apply-tips">想要评论一下吗？</div>
+                            <textarea class="form-control" placeholder="在此处留下您的评论..." th:field="*{content}"></textarea>
+								<div class="m-2 text-danger" th:if="${#fields.hasErrors('content')}">
+									<small th:errors="*{content}"></small>
+		                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-3">
+                                <label>昵称：</label>
+                                <input type="text" class="form-control" placeholder="必填" value="" required="required" th:field="*{nickname}">
+								<div class="m-2 text-danger" th:if="${#fields.hasErrors('nickname')}">
+									<small th:errors="*{nickname}"></small>
+		                        </div>
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label>邮箱：<span class="text-muted">(用于显示<a href="http://cn.gravatar.com/" target="_blank">Gravatar</a>头像，不会在评论中显示)</span></label>
+                                <input type="text" class="form-control" placeholder="必填" value="" required="required" th:field="*{email}">
+								<div class="m-2 text-danger" th:if="${#fields.hasErrors('email')}">
+									<small th:errors="*{email}"></small>
+		                        </div>
+                            </div>
+                        </div>
+                        <div class="row">
+	                        <div class="col d-flex justify-content-end">
+	                        <label>
+	                            <input type="hidden" th:field="*{blog}">
+	                        </label>
+	                        <label>
+	                            <input type="hidden" th:field="*{parentComment}">
+	                        </label>
+	                        <button class="btn btn-primary text-nowrap btn-sm m-2" type="submit">提交</button>
+	                        <a id="clearForm" class="btn btn-danger text-nowrap btn-sm m-2 d-none" onclick="clearForm()">取消回复</a>
+	                        </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card w-100 m-2 shadow">
+                <div class="card-header">
+                    <h4>相关评论</h4>
+                </div>
+                <div class="card-body">
+                    <p th:if="${#lists.isEmpty(blog.comments)}">暂无评论...</p>
+                    <div class="comment-list" th:unless="${#lists.isEmpty(blog.comments)}">
+                    	
+						<div class="comment rounded mb-2 border-bottom p-2" th:each="comment:${blog.comments}" th:unless="${comment.parentComment}!=null">
+                            <img class="float-left m-2" src="#" alt="" title="头像" width="50" data-gravatar="" data-gravatar-size="4" th:attr="data-gravatar=${comment.email}">
+                            <div class="row flex-column p-2">
+                                <p class="d-flex justify-content-between flex-column flex-sm-row">
+                                    <span th:text="${comment.nickname}">评论者</span>
+                                    <span class="text-muted" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}">2020年4月2日19:07:42</span>
+                                </p>
+                                <div class="comment-content rounded p-3 mb-2" th:text="${comment.content}">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus error odit sit unde velit? Accusamus aut consectetur culpa cum delectus ea eaque impedit magnam, maxime, nesciunt numquam, rem voluptatem voluptates!
+                                </div>
+                                <div class="pl-2">
+                                    <a href="#" class="apply" data-comment-id="1" data-comment-nickname="昵称" onclick="reply(this)" th:attr="data-comment-id=${comment.id},data-comment-nickname=${comment.nickname}">回复</a>
+                                </div>
+
+                                <div class="comment-list pl-2" th:unless="${#lists.isEmpty(comment.replyComments)}">
+                                    <div class="comment rounded mb-2 p-2" th:each="recomment:${comment.replyComments}">
+                                        <img class="float-left m-2" src="#" alt="头像加载失败" title="头像" width="50" data-gravatar="" data-gravatar-size="4" th:attr="data-gravatar=${recomment.email}">
+                                        <div class="row flex-column">
+                                            <p class="d-flex justify-content-between flex-column flex-sm-row">
+                                                <span th:text="${recomment.nickname}">评论者</span>
+                                                <span class="text-muted" th:text="${#dates.format(recomment.createTime,'yyyy-MM-dd HH:mm:ss')}">2020年4月2日19:07:42</span>
+                                            </p>
+                                            <div class="comment-content rounded p-3 mb-2" th:text="${recomment.content}">
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus error odit sit unde velit? Accusamus aut consectetur culpa cum delectus ea eaque impedit magnam, maxime, nesciunt numquam, rem voluptatem voluptates!
+                                            </div>
+                                            <div class="pl-2">
+                                                <a href="#" class="apply" data-comment-id="1" data-comment-nickname="昵称" onclick="reply(this)" th:attr="data-comment-id=${comment.id},data-comment-nickname=${recomment.nickname}">回复</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                               	</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    function reply(object) {
+        $('#apply-tips').html("回复 @"+$(object).attr("data-comment-nickname"))
+        $('#parentComment').val($(object).attr("data-comment-id"))
+        $('#clearForm').removeClass('d-none')
+    }
+    function clearForm(){
+        $('#apply-tips').html("快来吐槽一下吧！")
+        $('#parentComment').val("")
+        $('#clearForm').addClass('d-none')
+    }
+</script>
+<footer th:replace="common/_fragment::footer">
+</footer>
+</body>
+</html>

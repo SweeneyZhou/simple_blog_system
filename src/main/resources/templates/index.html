@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/_fragment::head(~{::title},~{::link},~{::style})">
+    <meta charset="UTF-8">
+    <title>Sweeney的博客</title>
+    <link rel="stylesheet" href="" th:href="@{/plugins/css/editormd.preview.css}"> 
+	<style>
+        .editormd-html-preview{
+            padding: 0;
+            height: 180px;
+            width:100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container" th:unless="${#lists.isEmpty(page.content)}">
+        <div class="row" th:each="obj:${page.content}" th:fragment="blog">
+			<div class="col" >
+			<div class="card m-2 shadow">
+                <div class="card-header d-flex align-items-end overflow-hidden">
+                    <h4 class="d-inline-block mb-0" th:text="${obj.title}">sdafsadfsadfsdfsdfsdEditor.md</h4>
+                    <span class="badge badge-success ml-2" th:each="tag:${obj.tags}" th:text="${tag.name}"></span>
+                </div>
+                <div class="card-body py-2">
+                    <div id="test-markdown-view" style="background-color: inherit" th:id="'blog-'+${obj.id}">
+                        <!-- Server-side output Markdown text -->
+                        <textarea style="display:none;" th:text="${obj.content}">### Hello world!</textarea>
+                    </div>
+                </div>
+                <div class="card-footer d-lg-flex justify-content-lg-between">
+                    <div class="d-none d-lg-block">
+                        <img src="" alt="" title="头像" width="32" data-gravatar="" data-gravatar-size="4" th:attr="data-gravatar=${obj.user?.email}">
+                        <span class="ml-2" th:text="${obj.user?.nickname}">作者</span>
+                        <span class="ml-2">发表于</span>
+                        <span th:text="${#dates.format(obj.createTime,'yyyy年MM月dd日 HH:mm:ss')}">2020年3月31日20:50:47</span>
+                        <span class="ml-2">评论数:</span>
+                        <span th:text="${obj.comments.size()}"></span>
+                        <span class="ml-2">访问量:</span>
+                        <span th:text="${obj.visitCount/2}"></span>
+                        <span class="ml-2">分类:</span>
+                        <span th:text="${obj.type.name}">分类</span>
+                    </div>
+                    <a href="blog-detail.html" th:href="@{/blog/{id}(id=${obj.id})}">阅读更多</a>
+                </div>
+                <script>
+                    $(function() {
+                        let testView = editormd.markdownToHTML("[['blog-'+${obj.id}]]", {});
+                    });
+                </script>
+            </div>
+			</div>
+        </div>
+        <div>
+            <a class="btn btn-primary m-2 " href="#" th:unless="${page.first}"  th:href="@{/index(page=${page.number}-1)">Previous</a>
+            <a class="btn btn-primary m-2 float-right"  href="#" th:unless="${page.last}" th:href="@{/index(page=${page.number}+1)">Next</a>
+        </div>
+    </div>
+</main>
+<footer th:replace="common/_fragment::footer">
+</footer>
+</body>
+</html>

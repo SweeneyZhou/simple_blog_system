@@ -1,0 +1,6 @@
+@charset "UTF-8";
+.editormd-html-preview {
+    padding: 0;
+    max-height: 180px;
+    overflow: hidden;
+}

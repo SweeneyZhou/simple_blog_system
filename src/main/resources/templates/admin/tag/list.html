@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/_fragment::head(~{::title},~{},~{})">
+    <meta charset="UTF-8">
+    <title>标签管理</title>
+</head>
+<body class="d-flex flex-column" style="min-height: 100vh;background-color: #f0f0f0">
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row" th:replace="admin/index::adminNav"></div>
+                <div th:replace="common/_fragment::msg"> </div>
+                <div class="row">
+                    <div class="card w-100 mb-3 mx-3">
+                        <div class="card-body">	                        
+                        <div th:if="${#lists.isEmpty(page.content)}">暂时还没有标签哦，你必须<a href="#" th:href="@{/admin/tag/add}">添加</a>至少一个标签才可以添加文章哦！</div>
+	                        <div th:unless="${#lists.isEmpty(page.content)}">
+                            <div class="table-responsive text-nowrap">
+                            <table class="table table-striped table-bordered table-hover table-sm">
+                                    <thead class="thead-light text-center">
+                                    <tr>
+                                        <th>序号</th>
+                                        <th>标签名称</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="obj:${page.content}">
+                                        <td th:text="${objStat.index+1}">1111</td>
+                                        <td th:text="${obj.name}">Lorem ipsum dolo</td>
+                                        <td>
+                                            <a href="#" class="btn btn-primary btn-sm" th:href="@{/admin/tag/{id}(id=${obj.id})}">编辑</a>
+											<form action="#" method="post" class="d-inline-block" th:action="@{/admin/tag/{id}(id=${obj.id})}">
+                                                <input type="hidden" name="_method" value="delete">
+                                                <button type="submit" class="btn btn-danger btn-sm">删除</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <a href="#" class="btn btn-success btn-sm" th:href="@{/admin/tag/add}">添加</a>
+                                <span>当前第<span th:text="${page.number+1}">?</span>页，共<span th:text="${page.totalPages}">?</span>页</span>
+                                <div class="pagination pagination-sm">
+                                    <div class="page-item" th:class="${page.first}?'page-item disabled':'page-item'"><a class="page-link" href="#" th:href="@{/admin/types(page=${page.number}-1)}">Previous</a></div>
+                                    <div class="page-item" th:class="${page.last}?'page-item disabled':'page-item'"><a class="page-link" href="#" th:href="@{/admin/types(page=${page.number}+1)}">Next</a></div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row" th:replace="admin/index::adminSideBar">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem blanditiis in iusto quam sunt tempora tempore, veniam. Asperiores deleniti facilis fugit laboriosam minus nisi nostrum quae, saepe, vel, veniam voluptatem.</p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="common/_fragment::footer">
+</footer>
+
+</body>
+</html>

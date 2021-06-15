@@ -1,0 +1,2 @@
+#插入初始化数据
+INSERT INTO `test_db`.`t_user` ( `create_time`,`nickname`, `password`, `roles`, `username`) select CURRENT_TIMESTAMP,'幽谷清流', 'admin', '0', 'admin' from dual where NOT EXISTS (SELECT id FROM `test_db`.`t_user`)

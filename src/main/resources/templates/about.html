@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/_fragment::head(~{::title},~{},~{})">
+<title>Sweeney的博客-About</title>
+</head>
+<body>
+
+<header th:replace="common/_fragment::header"></header>
+
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="card m-2 shadow">
+				<div class="card-header"><h4>关于</h4></div>
+				<div class="card-body">
+					<div>博主：<span>[[${user?.nickname}]]</span></div>
+					<div>邮箱：<span>[[${user?.email}]]</span></div>
+					<div>生日：<span>[[${#dates.format(user?.birthday,'yyyy-MM-dd')}]]</span></div>
+					<div>个人签名：<span>[[${user?.description}]]</span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer th:replace="common/_fragment::footer"></footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head  th:fragment="common_head(title,links,style)">
+	<meta charset="UTF-8">    
+	<title th:replace="${title}">fragment模板片段</title>
+    <!-- conmmon -->
+	<meta name="author" content="Sweeney">
+    <meta name="keywords" content="Sweeney,博客,分享">
+    <meta name="description" content="你好，这里是Sweeney的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" href="" th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" href="" th:href="@{/css/common.css}">
+	<link rel="stylesheet" href="" th:href="@{/plugins/bootstrap-select-1.13.9/css/bootstrap-select.min.css}">
+	<link rel="stylesheet" href="" th:href="@{/css/font-awesome.min.css}">
+	<link rel="SHORTCUT ICON" href="" th:href="@{/favicon1.ico}">
+	<script src="" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+	<script src="" th:src="@{/js/popper.min.js}">></script>
+	<script src="" th:src="@{/js/md5.min.js}">></script>
+	<script src="" th:src="@{/js/bootstrap.min.js}">></script>
+	<script src="" th:src="@{/plugins/editormd.js}"></script>
+	<script src="" th:src="@{/plugins/lib/marked.min.js}"></script>
+	<script src="" th:src="@{/plugins/lib/prettify.min.js}"></script>
+	<script src="" th:src="@{/js/gravatar.js}"></script>
+	<script src="" th:src="@{/plugins/bootstrap-select-1.13.9/js/bootstrap-select.js}"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+
+	<!-- private-->
+	<th:block th:replace="${links}"/>
+	<th:block th:replace="${style}"/>
+	
+</head>
+<body>
+<header>
+
+	<div class="my-background"></div>
+    <nav class="navbar navbar-expand-md shadow mb-2 align-items-center">
+        <div class="container">
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="#" th:href="@{/admin}">Sweeney 小筑</a>
+
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse justify-content-between" id="collapsibleNavbar">
+                <ul class="navbar-nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/index}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/type}">分类</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/tag}">标签</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/message}">留言</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/about}">关于</a>
+                    </li>
+                </ul>
+                <!-- 
+				<form class="mr-0">
+                    <div class="input-group cus-input-group">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">搜索</button>
+                        </div>
+                    </div>
+                </form>
+                
+                 -->
+
+            </div>
+        </div>
+    </nav>
+</header>
+
+               	<div th:fragment="msg">
+               	<div class="row" th:if="${successMsg!=null}">
+               		<div class="col">
+               			<div class="alert alert-success alert-dismissible">
+  							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							  <strong>成功!</strong> <small th:text="${successMsg}">指定操作成功提示信息。</small>
+						</div>
+               		</div>
+               	</div>
+               	<div class="row" th:if="${failedMsg!=null}">
+               		<div class="col">
+               			<div class="alert alert-danger alert-dismissible">
+  							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							  <strong>错误!</strong> <small th:text="${failedMsg}">指定操作成功提示信息。</small>
+						</div>
+               		</div>
+               	</div>
+               	</div>
+<footer class="mt-auto">
+    <p class="m-3 text-muted text-center text-small">&copy; 2020 Sweeney All Rights Reserved</p>
+</footer>
+</body>
+</html>

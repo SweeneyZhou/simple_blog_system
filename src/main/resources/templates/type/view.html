@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/_fragment::head(~{::title},~{::link},~{::style})">
+    <meta charset="UTF-8">
+    <title>Sweeney的博客-HOME</title>
+    <link rel="stylesheet" href="" th:href="@{/plugins/css/editormd.preview.css}"> 
+	<style>
+        .editormd-html-preview{
+            padding: 0;
+            max-height: 180px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container mt-2">
+    	<div class="row" th:unless="${#lists.isEmpty(list)}">
+			<div class="card w-100 m-2">
+				<div class="card-header">
+					<h5 class="m-0">所有分类</h5>
+				</div>
+				<div class="card-body">
+				
+					<div class="d-flex flex-wrap align-content-between">
+						<a href="#" class="m-2 p-2" th:each="obj:${list}" onclick="getByTypeId(this)" th:attr="data-type-id=${obj.id}">
+							<span th:text="${obj.name}">博主资料</span>
+							<span class="badge badge-info ml-2" th:text="${obj.blogs.size()}">信息</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="blog-container"></div>
+	</div>
+	
+</main>
+<footer th:replace="common/_fragment::footer">
+</footer>
+<script type="text/javascript">
+	function getByTypeId(obj){
+	    let url="/type";
+	    console.log("url="+url);
+	    $('#blog-container').load(url,{
+	            "id":$(obj).attr("data-type-id"),
+	            "_csrf": "[[${_csrf.token}]]",
+	            "_csrf_header":"[[${_csrf.headerName}]]"
+	        });
+	}
+</script>
+</body>
+</html>

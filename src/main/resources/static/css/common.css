@@ -1,0 +1,54 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /*
+        background-color: #f6f6f6;
+        background-image: url("http://www.dmoe.cc/random.php");
+        background-attachment: fixed;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;*/
+}
+
+.my-background {
+    height: 200vh;
+    width: 100vw;
+    overflow: hidden;
+    position: fixed;
+    z-index: -1;
+    /*�������ԪͼƬ
+        ����URL��
+        https://api.ixiaowai.cn/api/api.php
+        http://www.dmoe.cc/random.php
+
+    */
+    background-image: url("https://api.ixiaowai.cn/api/api.php");
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    /*�����˹ģ�����������ɬͼ�����˷��ֵĸ���*/
+    filter: blur(10px);
+}
+
+header .navbar {
+    background-color: #f6f6f6e3;
+    color: #fdfdfe;
+}
+
+header .navbar .nav-link:hover {
+    color: white;
+    background-color: #66ccff;
+    text-decoration-line: overline;
+}
+
+.card {
+    background-color: #f6f6f6e3;
+}
+
+footer {
+    background-color: #f6f6f6e3;
+}

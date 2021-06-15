@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/_fragment::head(~{::title},~{},~{})">
+	<meta charset="UTF-8">
+	<title>标签管理</title>
+</head>
+<body class="d-flex flex-column" style="min-height: 100vh;background-color: #f0f0f0">
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row" th:replace="admin/index::adminNav">
+                    <div class="card w-100 mb-3 mx-3">
+                        <div class="card-body">
+                            <p class="border-bottom pb-2 font-weight-bolder">后台管理</p>
+                            <div class="d-flex flex-wrap align-content-between">
+                                <a href="#" class="card-link mx-3">博主信息</a>
+                                <a href="#" class="card-link mx-3">分类管理</a>
+                                <a href="#" class="card-link mx-3">标签管理</a>
+                                <a href="#" class="card-link mx-3">退出登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card w-100 mb-3 mx-3">
+                        <form action="#" method="post" th:object="${tag}" th:action="*{id}==null?@{/admin/tag}:@{/admin/tag/{id}(id=*{id})}">
+                        <div class="card-body">
+                        	<input type="text" class="form-control" id="type" placeholder="输入标签名称" th:field="*{name}">
+                        	<div class="m-2 text-danger">
+                        		<small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                        	</div>
+                        	<input type="hidden" name="_method" value="put" th:if="${tag.id!=null}"/>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary mx-2">提交</button>
+                            <a class="btn btn-secondary mx-2" th:href="@{/admin/tags}">返回</a>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row" th:replace="admin/index::adminSideBar">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem blanditiis in iusto quam sunt tempora tempore, veniam. Asperiores deleniti facilis fugit laboriosam minus nisi nostrum quae, saepe, vel, veniam voluptatem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-auto">
+    <p class="text-muted text-center py-3">&copy; 2020 Sweeney</p>
+</footer>
+
+</body>
+</html>

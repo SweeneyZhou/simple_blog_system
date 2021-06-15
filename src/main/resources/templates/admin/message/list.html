@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/_fragment::head(~{::title},~{},~{::style})">
+    <meta charset="UTF-8">
+    <title>留言管理</title>
+	<style>
+        .comment-content{
+            background-color: #66ccff;
+            position: relative;
+        }
+        .comment-content:before{
+            content: '';
+            position: absolute;
+            top:-0.2rem;
+            width: 10px;
+            height: 10px;
+            background: inherit;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="d-flex flex-column" style="min-height: 100vh;background-color: #f0f0f0">
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+				<div class="row" th:replace="admin/index::adminNav"></div>
+				
+                <div th:replace="common/_fragment::msg"> </div>
+				<div class="row">
+		            <div class="card w-100 mb-3 mx-3">
+		                <div class="card-header">
+		                    <h4>留言管理</h4>
+		                </div>
+						<form method="POST" th:action="@{/admin/message}" th:object="${form}">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="mb-2" id="apply-tips">留言</div>
+                            <textarea class="form-control" placeholder="回复留言." th:field="*{content}"></textarea>
+							<div class="m-2 text-danger" th:if="${#fields.hasErrors('content')}">
+								<small th:errors="*{content}"></small>
+	                        </div>	
+                        </div>
+                        <div class="row">
+                            <div class="col d-flex justify-content-end">
+								<label>
+								    <input type="hidden" th:field="*{parentMessage}">
+								</label>
+								<button class="btn btn-primary text-nowrap btn-sm m-2" type="submit">提交</button>
+								<a id="clearForm" class="btn btn-danger text-nowrap btn-sm m-2 d-none" onclick="clearForm()">取消回复</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+			<div class="row">
+            <div class="card w-100 mb-3 mx-3">
+                <div class="card-header">
+                    <h4>留言</h4>
+                </div>
+                <div class="card-body">
+                    <p th:if="${#lists.isEmpty(page.content)}">暂无留言...</p>
+                    <div class="comment-list" th:unless="${#lists.isEmpty(page.content)}">
+                        <div class="comment rounded mb-2 border-bottom p-2" th:each="obj:${page.content}" th:unless="${obj.parentMessage!=null}">
+                            <img class="float-left m-2" src="" alt="头像加载失败" title="头像" width="50" data-gravatar="75a32697f9e2875d080c75d1c049ff50" data-gravatar-size="4" th:attr="data-gravatar=${obj.email}">
+                            <div class="row flex-column p-2">
+                                <p class="d-flex justify-content-between flex-column flex-sm-row">
+                                    <span th:text="${obj.nickname}">评论者</span>
+                                    <span th:text="${#dates.format(obj.createdTime,'yyyy-MM-dd HH:mm:ss')}" class="text-muted">2020年4月2日19:07:42</span>
+                                </p>
+                                <div class="comment-content rounded p-3 mb-2" th:text="${obj.content}">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus error odit sit unde velit? Accusamus aut consectetur culpa cum delectus ea eaque impedit magnam, maxime, nesciunt numquam, rem voluptatem voluptates!
+                                </div>
+                                <div class="pl-2">
+                                    <a href="#" class="apply" data-comment-id="1" data-comment-nickname="昵称" onclick="reply(this)" th:attr="data-comment-id=${obj.id},data-comment-nickname=${obj.nickname}">回复</a>
+                                </div>
+
+                                <div class="comment-list pl-2" th:unless="${#lists.isEmpty(obj.replyMessage)}">
+                                    <div class="comment rounded mt-2 p-2" th:each="replyobj:${obj.replyMessage}">
+                                        <img class="float-left m-2" src="https://www.gravatar.com/avatar/75a32697f9e2875d080c75d1c049ff50.jpg?s=200" alt="头像加载失败" title="头像" width="50" data-gravatar="75a32697f9e2875d080c75d1c049ff50" data-gravatar-size="4" style="border-radius: 50%;"  th:attr="data-gravatar=${replyobj.email}">
+                                        <div class="row flex-column">
+                                            <p class="d-flex justify-content-between flex-column flex-sm-row">
+                                                <span th:text="${replyobj.nickname}">评论者</span>
+                                                <span th:text="${#dates.format(replyobj.createdTime,'yyyy-MM-dd HH:mm:ss')}" class="text-muted">2020年4月2日19:07:42</span>
+                                            </p>
+                                            <div class="comment-content rounded p-3 mb-2" th:text="${replyobj.content}">
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus error odit sit unde velit? Accusamus aut consectetur culpa cum delectus ea eaque impedit magnam, maxime, nesciunt numquam, rem voluptatem voluptates!
+                                            </div>
+                                            <div class="pl-2">
+                                                <a href="#" class="apply" data-comment-id="1" data-comment-nickname="昵称" onclick="reply(this)" th:attr="data-comment-id=${obj.id},data-comment-nickname=${replyobj.nickname}">回复</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="row" th:replace="admin/index::adminSideBar">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem blanditiis in iusto quam sunt tempora tempore, veniam. Asperiores deleniti facilis fugit laboriosam minus nisi nostrum quae, saepe, vel, veniam voluptatem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function reply(object) {
+        $('#apply-tips').html("回复 @"+$(object).attr("data-comment-nickname"))
+        $('#parentMessage').val($(object).attr("data-comment-id"))
+        $('#clearForm').removeClass('d-none')
+    }
+    function clearForm(){
+        $('#apply-tips').html("留言")
+        $('#parentMessage').val("")
+        $('#clearForm').addClass('d-none')
+    }
+</script>
+<footer th:replace="common/_fragment::footer">
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/_fragment::common_head(~{::title},~{},~{})">
+    <meta charset="UTF-8">
+    <title>后台管理</title>
+</head>
+<body>
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row" th:fragment="adminNav">
+                    <div class="card w-100 mb-3 mx-3">
+                        <div class="card-body">
+						   <div class="row m-2 p-2 border-bottom align-items-end">
+						       <h4 class="m-0">后台管理</h4>
+						   </div>
+                            <div class="d-flex flex-wrap align-content-between">
+                                <a href="#" class="card-link mx-3" th:href="@{/admin}">博主资料</a>
+                                <a href="#" class="card-link mx-3" th:href="@{/admin/types}">分类管理</a>
+                                <a href="#" class="card-link mx-3" th:href="@{/admin/tags}">标签管理</a>
+                                <a href="#" class="card-link mx-3" th:href="@{/admin/blogs}">博客管理</a>
+                                <a href="#" class="card-link mx-3" th:href="@{/admin/comments}">评论管理</a>
+                                <a href="#" class="card-link mx-3" th:href="@{/admin/message}">留言管理</a>
+                                <form method="POST" th:action="@{/logout}" id="logoutForm"></form>
+                                <a href="#" class="card-link mx-3" onclick="$('#logoutForm').submit()">退出登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:replace="common/_fragment::msg"> </div>
+                <div class="row" th:unless="${userinfo!=null}">
+						<div class="card w-100 mb-3 mx-3">
+							<div class="card-header d-flex align-items-end">
+							<h4>博主资料</h4>
+						       <small class="text-muted ml-2 mb-1">
+						           欢迎您 ,<span th:text="${userInfo.nickname}">昵称</span>！
+						       </small>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col col-lg-6 p-2">用户名:<span class="ml-2" th:text="${userInfo.username}"></span></div>
+									<div class="col col-lg-6 p-2 border-left border-dark">昵称:<span class="ml-2" th:text="${userInfo.nickname}"></span></div>
+								</div>
+								
+								<div class="row">
+									<div class="col col-lg-6 p-2">邮箱:<span class="ml-2" th:text="${userInfo.email}"></span></div>
+									<div class="col col-lg-6 p-2 border-left border-dark">权限:<span class="ml-2" th:text="${userInfo.Roles}"></span></div>
+								</div>
+								<div class="row">
+									<div class="col col-lg-6 p-2">性别:<span class="ml-2" th:text="${userInfo.gender?.value}"></span></div>
+									<div class="col col-lg-6 p-2 border-left border-dark">生日:<span class="ml-2" th:text="${#dates.format(userInfo.birthday,'yyyy-MM-dd')}"></span></div>
+								</div>
+								<div class="row">
+									<div class="col col-lg-6 p-2">现居地:<span class="ml-2" th:text="${userInfo.address}"></span></div>
+									<div class="col col-lg-6 p-2 border-left border-dark">籍贯:<span class="ml-2" th:text="${userInfo.nativeplace}"></span></div>
+								</div>
+								
+								<div class="row">
+									<div class="col p-2">个人签名</div>
+								</div>
+								<div class="row">
+									<div class="col bg-white mx-2 py-3 px-4 rounded" th:text="${userInfo.description}"></div>
+								</div>
+							</div>
+						<div class="card-footer d-flex justify-content-end align-item-center">
+							<a href="#" class="mx-2" th:href="@{/admin/edit/1}" style="line-height:1.8em">修改个人资料</a>
+							<a href=""class="btn btn-danger btn-sm mx-2" th:href="@{/admin/password/1}">修改密码</a>
+						</div>
+						</div>
+					</div>
+            	</div>
+            <div class="col-lg-3">
+                <div class="row"  th:fragment="adminSideBar">
+               		<div class="col">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                    	<div class="card-header">
+                    		<h4>网站数据</h4>
+                    	</div>
+                        <div class="card-body">
+                       		<div></div>
+                        	<div>博客数：<span id="blogCount"></span></div>
+                        	<script type="text/javascript">
+                			$.ajax({
+                                url: '[[@{/api/count/blog}]]',
+                                success: function (result) {
+                                    $('#blogCount').text(result);
+                                }
+                            })
+                        	</script>
+                        	<div>评论数：<span id="commentCount"></span></div>
+                        	<script type="text/javascript">
+                			$.ajax({
+                                url: '[[@{/api/count/comment}]]',
+                                success: function (result) {
+                                    $('#commentCount').text(result);
+                                }
+                            })
+                        	</script>
+                        	<div>留言数：<span id="messageCount"></span></div>
+                        	<script type="text/javascript">
+                			$.ajax({
+                                url: '[[@{/api/count/message}]]',
+                                success: function (result) {
+                                    $('#messageCount').text(result);
+                                }
+                            })
+                        	</script>
+                        </div>
+                    </div>
+               		</div>
+               		
+               	</div>
+            </div>
+        </div>
+
+
+    </div>
+</main>
+
+<footer th:replace="common/_fragment::footer">
+</footer>
+
+</body>
+</html>

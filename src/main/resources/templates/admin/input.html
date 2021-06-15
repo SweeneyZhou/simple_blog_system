@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN" 
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/_fragment::common_head(~{::title},~{},~{})">
+    <meta charset="UTF-8">
+    <title>修改个人资料</title>
+</head>
+<body>
+<header th:replace="common/_fragment::header"></header>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="row" th:replace="admin/index::adminNav"></div>
+				<div class="row" th:unless="${userinfo!=null}" th:if="${changePassword!=null}">
+                    <div class="card w-100 mb-3 mx-3">
+                        <form action="#" method="post" th:action="@{/admin}" th:object="${changePassword}">
+                        <div class="card-body">
+                        	<input type="password" class="form-control mb-3" placeholder="输入旧密码" th:field="*{oldPassword}">
+                        	<input type="password" class="form-control" placeholder="输入新密码" th:field="*{newPassword}">
+                        	<input type="hidden" th:field="*{userId}"/>
+                        	<input type="hidden" name="_method" value="put"/>
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary mx-2">提交</button>
+                            <a th:href="@{/admin}" class="btn btn-secondary mx-2">返回</a>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <form method="POST" th:if="${userinfo!=null}" th:action="@{/admin}" th:object="${userinfo}" >
+	                <div class="row">
+						<div class="card w-100 mb-3 mx-3">
+							<div class="card-header">
+								<h4>修改个人资料</h4>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+								<input type="hidden" th:field="*{id}">
+						        	<div class="col-md-6 mb-3">
+							            <p>用户名:</p>
+							            <input type="text" class="form-control" placeholder="用户名" value="" th:field="*{username}">
+									</div>
+									<div class="col-md-6 mb-3">
+									  <p>昵称:</p>
+									  <input type="text" class="form-control" placeholder="昵称" value="" th:field="*{nickname}">
+									</div>
+									<div class="col-12 mb-3">
+										<p>邮箱:</p>
+										<input type="email" class="form-control" placeholder="your@email.com" th:field="*{email}">
+						                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+									</div>
+									<div class="col-6 mb-3">
+										<p>性别</p>
+		                                <select class="custom-select w-100" th:field="*{gender}">
+		                                    <option value="">-- 性别 --</option>
+		                                    <option value="MALE">男</option>
+		                                    <option value="FEMALE">女</option>
+		                                </select>
+									</div>
+									<div class="col-6">
+                                        <p>生日:</p>
+						                <div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+						                    <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4" th:field="*{birthday}"/>
+						                    <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+						                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+						                    </div>
+						                </div>
+						                <small th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></small>
+				                        <script type="text/javascript">
+								            $(function () {
+								                $('#datetimepicker4').datetimepicker({
+								                    format: 'L',
+								                    locale: 'zh'
+								                });
+								            });
+								        </script>
+									</div>
+									<div class="col-md-6 mb-3">
+										<p>现居地:</p>
+										<input type="text" class="form-control" placeholder="现居地" th:field="*{address}">
+									</div>
+									<div class="col-md-6 mb-3">
+										<p>籍贯:</p>
+										<input type="text" class="form-control" placeholder="籍贯" th:field="*{nativeplace}">
+									</div>
+									<div class="col-12">
+										<p>个人签名:</p>
+										<textarea class="form-control"  th:field="*{description}"></textarea>
+									</div>
+						        </div>
+							</div>
+							<div class="card-footer d-flex justify-content-end align-item-center">
+								<button type="submit" class="btn btn-primary">提交</button>
+                            <a th:href="@{/admin}" class="btn btn-secondary mx-2">返回</a>
+							</div>
+						</div>
+					</div>
+                </form>
+            	</div>
+            <div class="col-lg-3">
+                <div class="row" th:replace="admin/index::adminSideBar">
+                    <div class="card mb-3 mx-3 mx-lg-0">
+                        <div class="card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem blanditiis in iusto quam sunt tempora tempore, veniam. Asperiores deleniti facilis fugit laboriosam minus nisi nostrum quae, saepe, vel, veniam voluptatem.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</main>
+
+<footer th:replace="common/_fragment::footer">
+</footer>
+
+</body>
+</html>
